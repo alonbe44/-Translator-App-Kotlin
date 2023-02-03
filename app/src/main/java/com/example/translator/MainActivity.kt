@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                         /* Looping through the matchesArray and getting the translation with the highest
                     match. */
                         for (i in 0 until matchesArray.length()) {
-                            if (matchesArray.getJSONObject(i).getDouble("match") > highestMatch) {
+                            if (matchesArray.getJSONObject(i).getDouble("match") >= highestMatch) {
                                 bestMatchTranslation =
                                     matchesArray.getJSONObject(i).getString("translation")
                                 highestMatch = matchesArray.getJSONObject(i).getDouble("match")

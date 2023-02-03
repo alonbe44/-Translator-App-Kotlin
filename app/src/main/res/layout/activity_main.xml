@@ -8,43 +8,51 @@
 
     <TextView
         android:id="@+id/output"
-        android:layout_width="0dp"
-        android:layout_height="145dp"
+        android:layout_width="315dp"
+        android:layout_height="123dp"
+        android:background="@drawable/rounded_rectangle"
         android:hint="@string/answer"
         android:textAlignment="center"
-        android:textColor="#31D1C2"
+        android:textColor="@color/black"
+        android:textColorHint="#FF292727"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32"
-        />
+        app:layout_constraintVertical_bias="0.32" />
 
     <EditText
         android:id="@+id/input"
-        android:layout_width="0dp"
-        android:layout_height="145dp"
+        android:layout_width="315dp"
+        android:layout_height="123dp"
+        android:autofillHints=""
+        android:background="@drawable/rounded_rectangleinput"
+        android:backgroundTint="#8DD1D8"
         android:ems="10"
-        android:gravity="start|top"
+        android:hint="@string/input_text_to_translate"
         android:inputType="textMultiLine"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textColorHint="#292727"
         android:textSize="20sp"
+        app:cornerRadius="50dp"
         app:layout_constraintBottom_toTopOf="@+id/output"
         app:layout_constraintEnd_toEndOf="@+id/output"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/output"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:autofillHints=""
-        tools:ignore="LabelFor,VisualLintTextFieldSize"
-        />
+        app:layout_constraintVertical_bias="0.65" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="175dp"
         android:layout_height="60dp"
+        android:background="@drawable/rounded_rectanglebutton"
+        android:backgroundTint="#93C0C5"
         android:text="@string/translate"
+        android:textColor="@color/black"
         android:textColorHint="#039C8E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/output"
@@ -52,12 +60,13 @@
         app:layout_constraintStart_toStartOf="@+id/output"
         app:layout_constraintTop_toBottomOf="@+id/output"
         app:layout_constraintVertical_bias="0.724"
-        />
+        tools:ignore="TextSizeCheck" />
 
     <ImageButton
         android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:background="@drawable/rounded_rectangleimage"
         android:contentDescription="@string/todo"
         app:layout_constraintBottom_toBottomOf="@+id/output"
         app:layout_constraintEnd_toEndOf="@+id/output"
@@ -70,13 +79,14 @@
 
     <ImageButton
         android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:background="@drawable/rounded_rectangleimage"
         android:contentDescription="Speak"
-        app:layout_constraintBottom_toTopOf="@+id/output"
+        app:layout_constraintBottom_toBottomOf="@+id/input"
         app:layout_constraintEnd_toEndOf="@+id/input"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/input"
         app:layout_constraintTop_toTopOf="@+id/input"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/speak"
@@ -84,24 +94,74 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="176dp"
-        android:layout_height="68dp"
+        android:layout_width="254dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="128dp"
+        android:scrollbarSize="10dp"
+        android:spinnerMode="dialog"
         app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/output"
-        app:layout_constraintVertical_bias="0.318" />
+        app:layout_constraintVertical_bias="0.344"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <Spinner
         android:id="@+id/spinner2"
-        android:layout_width="181dp"
-        android:layout_height="70dp"
+        android:layout_width="255dp"
+        android:layout_height="54dp"
+        android:spinnerMode="dialog"
         app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/spinner"
+        app:layout_constraintEnd_toEndOf="@+id/spinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/spinner"
         app:layout_constraintTop_toBottomOf="@+id/output"
-        app:layout_constraintVertical_bias="0.322" />
+        app:layout_constraintVertical_bias="0.8"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="202dp"
+        android:layout_height="36dp"
+        android:text="@string/omega_translator"
+        android:textAlignment="center"
+        android:textColor="#78909C"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/input"
+        app:layout_constraintEnd_toEndOf="@+id/input"
+        app:layout_constraintStart_toStartOf="@+id/input"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextSizeCheck" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="95dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="11dp"
+        android:text="@string/from"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintEnd_toEndOf="@+id/spinner"
+        app:layout_constraintHorizontal_bias="0.364"
+        app:layout_constraintStart_toStartOf="@+id/spinner"
+        app:layout_constraintTop_toBottomOf="@+id/output"
+        app:layout_constraintVertical_bias="0.597"
+        tools:ignore="TextSizeCheck" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="95dp"
+        android:layout_height="18dp"
+        android:text="@string/to"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/spinner2"
+        app:layout_constraintEnd_toEndOf="@+id/spinner"
+        app:layout_constraintHorizontal_bias="0.364"
+        app:layout_constraintStart_toStartOf="@+id/spinner2"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.568"
+        tools:ignore="TextSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
