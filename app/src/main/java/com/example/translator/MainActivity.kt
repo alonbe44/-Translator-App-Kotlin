@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var targetLanguageSpinner: Spinner
     private lateinit var startTranslationButton: Button
 
+
     private var sourceLanguageCode = "en"
     private var targetLanguageCode = "ar"
 
@@ -36,57 +37,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Take instance of Action Bar
-        // using getSupportActionBar and
-        // if it is not Null
-        // then call hide function
-        if (supportActionBar != null) {
-            supportActionBar!!.hide()
-        }
-
-        /* Initializing the variables that will be used in the code. */
-        httpClient = OkHttpClient()
-        outputTextView = findViewById(R.id.output)
-        inputTextView = findViewById(R.id.input)
-        outputSpeakButton = findViewById(R.id.imageButton)
-        inputSpeakButton = findViewById(R.id.imageButton2)
-        sourceLanguageSpinner = findViewById(R.id.spinner)
-        targetLanguageSpinner = findViewById(R.id.spinner2)
-        startTranslationButton = findViewById(R.id.button)
-
-
-        // Initialize TextToSpeech
-        textToSpeech = TextToSpeech(this) { status ->
-            // Check the initialization status
-            if (status == TextToSpeech.SUCCESS) {
-                // If successful, get all available languages
-                val allLanguages = textToSpeech.availableLanguages
-                // Map the languages to display the language code and display name
-                val allLang = allLanguages.map { "${it.language}: ${it.displayName}" }
-
-                // Create an adapter for the spinner using the language list
-                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, allLang)
-
-                // Set the adapter for both sourceLanguageSpinner and targetLanguageSpinner
-                sourceLanguageSpinner.adapter = adapter
-                targetLanguageSpinner.adapter = adapter
-
-                // Set the initial selection for both spinners
-                sourceLanguageSpinner.setSelection(1)
-                targetLanguageSpinner.setSelection(1)
-            } else {
-                // textToSpeech engine initialization failed
-            }
-        }
-
-        /* This is checking if the device is connected to the internet. If it is not connected to the
-        internet, it will show an alert with the message "No internet connection". */
-        if(!isOnline(this)) {
-            showAlert(this, getString(R.string.error_network_connection))
-        }
+        /* Calling the initialize() function. */
+        initialize()
 
         /* This is a lambda expression. It is a function that is passed as an argument to another
-        function. */
+        function, when the output Speaker image is clicked */
         outputSpeakButton.setOnClickListener {
             /* Checking if the outputTextView text view is empty. If it is empty, it will show a
             toast with the message "No Text to be spoken". */
@@ -96,15 +51,28 @@ class MainActivity : AppCompatActivity() {
             else {
                 /* Getting the selected language from the spinner. */
                 val selectedLang = targetLanguageSpinner.selectedItem.toString()
-                /* Setting the language of the TextToSpeech engine to the selected language. */
-                textToSpeech.language = Locale.forLanguageTag(selectedLang.substring(0, 2))
-                /* Speaking the text that is in the outputTextView text view. */
-                textToSpeech.speak(outputTextView.text, TextToSpeech.QUEUE_ADD, null, null)
+
+                /* The above code is checking if the selected language is available in the TextToSpeech
+                engine. If it is available, then it is setting the language of the TextToSpeech
+                engine to the selected language. Then it is speaking the text that is in the
+                outputTextView text view. */
+                if (textToSpeech.isLanguageAvailable(Locale(selectedLang)) == TextToSpeech.LANG_AVAILABLE) {
+                    /* Setting the language of the TextToSpeech engine to the selected language. */
+                    textToSpeech.language = Locale.forLanguageTag(selectedLang.substring(0, 2))
+                    /* Speaking the text that is in the outputTextView text view. */
+                    textToSpeech.speak(outputTextView.text, TextToSpeech.QUEUE_ADD, null, null)
+                }
+
+                /* Checking the language of the device and showing the alert in the same language. */
+                else
+                {
+                    showAlert(this,getString(R.string.language_not_available))
+                }
             }
         }
 
         /* This is a lambda expression. It is a function that is passed as an argument to another
-        function. */
+            function, when the input Speaker image is clicked */
         inputSpeakButton.setOnClickListener {
             /* This is checking if the outputTextView text view is empty. If it is empty, it will show
             a
@@ -116,16 +84,28 @@ class MainActivity : AppCompatActivity() {
                 /* Getting the selected language from the spinner. */
                 val selectedLang = sourceLanguageSpinner.selectedItem.toString()
 
-                /* Setting the language of the TextToSpeech engine to the selected language. */
-                textToSpeech.language = Locale.forLanguageTag(selectedLang.substring(0, 2))
+                /* The above code is checking if the language selected by the user is available on the
+                device. If it is available, then the language is set to the selected language and
+                the text is spoken. */
+                if (textToSpeech.isLanguageAvailable(Locale(selectedLang)) == TextToSpeech.LANG_AVAILABLE) {
 
-                /* Speaking the text that is in the inputTextView text view. */
-                textToSpeech.speak(inputTextView.text, TextToSpeech.QUEUE_ADD, null, null)
+                    /* Setting the language of the TextToSpeech engine to the selected language. */
+                    textToSpeech.language = Locale.forLanguageTag(selectedLang.substring(0, 2))
+
+                    /* Speaking the text that is in the inputTextView text view. */
+                    textToSpeech.speak(inputTextView.text, TextToSpeech.QUEUE_ADD, null, null)
+                }
+
+                /* Checking the language of the device and showing the alert in the same language. */
+                else
+                {
+                    showAlert(this,getString(R.string.language_not_available))
+                }
             }
         }
 
         /* This is a lambda expression. It is a function that is passed as an argument to another
-        function. */
+         function, when the Translation Button is clicked */
         startTranslationButton.setOnClickListener {
             /* This is checking if the device is connected to the internet. If it is not connected to
             the
@@ -298,5 +278,209 @@ class MainActivity : AppCompatActivity() {
         alert.show()
     }
 
+    /**
+     * This function initializes all the variables that will be used in the code
+     */
+    private fun initialize(){
+
+        /* Initializing the variables that will be used in the code. */
+        httpClient = OkHttpClient()
+        outputTextView = findViewById(R.id.output)
+        inputTextView = findViewById(R.id.input)
+        outputSpeakButton = findViewById(R.id.imageButton)
+        inputSpeakButton = findViewById(R.id.imageButton2)
+        sourceLanguageSpinner = findViewById(R.id.spinner)
+        targetLanguageSpinner = findViewById(R.id.spinner2)
+        startTranslationButton = findViewById(R.id.button)
+
+        // Initialize TextToSpeech
+        textToSpeech = TextToSpeech(this) { status ->
+            // Check the initialization status
+            if (status == TextToSpeech.SUCCESS) {
+
+                /* Creating an array of strings including all supported languages . */
+                val supportedLanguage= arrayOf(
+                    "af-ZA:Afrikaans",
+                    "sq-AL:Albanian",
+                    "am-ET:Amharic",
+                    "ar-SA:Arabic",
+                    "hy-AM:Armenian",
+                    "az-AZ:Azerbaijani",
+                    "bjs-BB:Bajan",
+                    "rm-RO:BalkanGipsy",
+                    "eu-ES:Basque",
+                    "bem-ZM:Bemba",
+                    "bn-IN:Bengali",
+                    "be-BY:Bielarus",
+                    "bi-VU:Bislama",
+                    "bs-BA:Bosnian",
+                    "br-FR:Breton",
+                    "bg-BG:Bulgarian",
+                    "my-MM:Burmese",
+                    "ca-ES:Catalan",
+                    "cb-PH:Cebuano",
+                    "ch-GU:Chamorro",
+                    "zh-CN:Chinese(Simplified)",
+                    "zh-TW:ChineseTraditional",
+                    "zdj-KM:Comorian(Ngazidja)",
+                    "cop-EG:Coptic",
+                    "aig-AG:CreoleEnglish(AntiguaandBarbuda)",
+                    "bah-BS:CreoleEnglish(Bahamas)",
+                    "gcl-GD:CreoleEnglish(Grenadian)",
+                    "gyn-GY:CreoleEnglish(Guyanese)",
+                    "jam-JM:CreoleEnglish(Jamaican)",
+                    "svc-VC:CreoleEnglish(Vincentian)",
+                    "vic-US:CreoleEnglish(VirginIslands)",
+                    "ht-HT:CreoleFrench(Haitian)",
+                    "acf-LC:CreoleFrench(SaintLucian)",
+                    "crs-SC:CreoleFrench(Seselwa)",
+                    "pov-GW:CreolePortuguese(UpperGuinea)",
+                    "hr-HR:Croatian",
+                    "cs-CZ:Czech",
+                    "da-DK:Danish",
+                    "nl-NL:Dutch",
+                    "dz-BT:Dzongkha",
+                    "en-GB:English",
+                    "eo-EU:Esperanto",
+                    "et-EE:Estonian",
+                    "fn-FNG:Fanagalo",
+                    "fo-FO:Faroese",
+                    "fi-FI:Finnish",
+                    "fr-FR:French",
+                    "gl-ES:Galician",
+                    "ka-GE:Georgian",
+                    "de-DE:German",
+                    "el-GR:Greek",
+                    "grc-GR:Greek(Classical)",
+                    "gu-IN:Gujarati",
+                    "ha-NE:Hausa",
+                    "haw-US:Hawaiian",
+                    "he-IL:Hebrew",
+                    "hi-IN:Hindi",
+                    "hu-HU:Hungarian",
+                    "is-IS:Icelandic",
+                    "id-ID:Indonesian",
+                    "kl-GL:Inuktitut(Greenlandic)",
+                    "ga-IE:IrishGaelic",
+                    "it-IT:Italian",
+                    "ja-JP:Japanese",
+                    "jv-ID:Javanese",
+                    "kea-CV:Kabuverdianu",
+                    "kab-DZ:Kabylian",
+                    "kn-IN:Kannada",
+                    "kk-KZ:Kazakh",
+                    "km-KM:Khmer",
+                    "rw-RW:Kinyarwanda",
+                    "rn-BI:Kirundi",
+                    "ko-KR:Korean",
+                    "ku-TR:Kurdish",
+                    "ckb-IQ:KurdishSorani",
+                    "ky-KG:Kyrgyz",
+                    "lo-LA:Lao",
+                    "la-VA:Latin",
+                    "lv-LV:Latvian",
+                    "lt-LT:Lithuanian",
+                    "lb-LU:Luxembourgish",
+                    "mk-MK:Macedonian",
+                    "mg-MG:Malagasy",
+                    "ms-MY:Malay",
+                    "dv-MV:Maldivian",
+                    "mt-MT:Maltese",
+                    "gv-IM:ManxGaelic",
+                    "mi-NZ:Maori",
+                    "mh-MH:Marshallese",
+                    "men-SL:Mende",
+                    "mn-MN:Mongolian",
+                    "mfe-MU:Morisyen",
+                    "ne-NP:Nepali",
+                    "niu-NU:Niuean",
+                    "no-NO:Norwegian",
+                    "ny-MW:Nyanja",
+                    "ur-PK:Pakistani",
+                    "pau-PW:Palauan",
+                    "pa-IN:Panjabi",
+                    "pap-CW:Papiamentu",
+                    "ps-PK:Pashto",
+                    "fa-IR:Persian",
+                    "pis-SB:Pijin",
+                    "pl-PL:Polish",
+                    "pt-PT:Portuguese",
+                    "pot-US:Potawatomi",
+                    "qu-PE:Quechua",
+                    "ro-RO:Romanian",
+                    "ru-RU:Russian",
+                    "sm-WS:Samoan",
+                    "sg-CF:Sango",
+                    "gd-GB:ScotsGaelic",
+                    "sr-RS:Serbian",
+                    "sn-ZW:Shona",
+                    "si-LK:Sinhala",
+                    "sk-SK:Slovak",
+                    "sl-SI:Slovenian",
+                    "so-SO:Somali",
+                    "st-ST:Sotho,Southern",
+                    "es-ES:Spanish",
+                    "srn-SR:SrananTongo",
+                    "sw-SZ:Swahili",
+                    "sv-SE:Swedish",
+                    "de-CH:SwissGerman",
+                    "syc-TR:Syriac(Aramaic)",
+                    "tl-PH:Tagalog",
+                    "tg-TJ:Tajik",
+                    "tmh-DZ:Tamashek(Tuareg)",
+                    "ta-LK:Tamil",
+                    "te-IN:Telugu",
+                    "tet-TL:Tetum",
+                    "th-TH:Thai",
+                    "bo-CN:Tibetan",
+                    "ti-TI:Tigrinya",
+                    "tpi-PG:TokPisin",
+                    "tkl-TK:Tokelauan",
+                    "to-TO:Tongan",
+                    "tn-BW:Tswana",
+                    "tr-TR:Turkish",
+                    "tk-TM:Turkmen",
+                    "tvl-TV:Tuvaluan",
+                    "uk-UA:Ukrainian",
+                    "ppk-ID:Uma",
+                    "uz-UZ:Uzbek",
+                    "vi-VN:Vietnamese",
+                    "wls-WF:Wallisian",
+                    "cy-GB:Welsh",
+                    "wo-SN:Wolof",
+                    "xh-ZA:Xhosa",
+                    "yi-YD:Yiddish",
+                    "zu-ZA:Zulu"
+                )
+
+                // Create an adapter for the spinner using the language list
+                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, supportedLanguage)
+
+                // Set the adapter for both sourceLanguageSpinner and targetLanguageSpinner
+                sourceLanguageSpinner.adapter = adapter
+                targetLanguageSpinner.adapter = adapter
+
+                // Set the initial selection for both spinners
+                sourceLanguageSpinner.setSelection(1)
+                targetLanguageSpinner.setSelection(1)
+            } else {
+                // textToSpeech engine initialization failed
+            }
+        }
+
+        /* This is checking if the device is connected to the internet. If it is not connected to the
+          internet, it will show an alert with the message "No internet connection". */
+        if(!isOnline(this)) {
+            showAlert(this, getString(R.string.error_network_connection))
+        }
+
+        // Take instance of Action Bar
+        // using getSupportActionBar and
+        // if it is not Null
+        // then call hide function
+        if (supportActionBar != null) {
+            supportActionBar!!.hide()
+        }
+    }
 
 }
