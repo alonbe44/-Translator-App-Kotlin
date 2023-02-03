@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Translator</string>
+    <string name="error">Sorry There is problem with the connection</string>
+    <string name="error_response">Sorry There is problem : %s</string>
+    <string name="error_tts_engine">TTS engine initialization failed Please try again later</string>
+    <string name="error_network_connection">No internet connection</string>
+    <string name="answer">Answer</string>
+    <string name="translate">Translate</string>
+    <string name="todo">Speak</string>
+    <string name="empty_text">No Text To Translate </string>
+
+
+</resources>

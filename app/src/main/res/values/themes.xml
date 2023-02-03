@@ -1,0 +1,27 @@
+<resources>
+    <!-- Text colors -->
+    <color name="primary_text_color">#222222</color>
+    <color name="secondary_text_color">#555555</color>
+
+    <!-- Background colors -->
+    <color name="primary_background_color">#FFFFFF</color>
+    <color name="secondary_background_color">#F5F5F5</color>
+
+    <!-- Button styles -->
+    <style name="PrimaryButton">
+        <item name="android:textColor">@color/primary_background_color</item>
+        <item name="android:background">@color/primary_text_color</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <!-- TextView styles -->
+    <style name="PrimaryTextView">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="SecondaryTextView">
+        <item name="android:textColor">@color/secondary_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>
